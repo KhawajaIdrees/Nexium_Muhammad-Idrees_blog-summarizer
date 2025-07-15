@@ -71,7 +71,7 @@ Make sure the summary is clear, accurate, and captures the essence of the origin
         `.trim();
 
         // Generate summary using Gemini
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const result = await model.generateContent(prompt);
         const response = await result.response;

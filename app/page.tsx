@@ -21,15 +21,22 @@ interface SummaryData {
     };
 }
 
+interface TranslationData {
+    originalText: string;
+    translatedText: string;
+}
+
 export default function BlogSummarizer() {
     const [url, setUrl] = useState("");
     const [scrapedData, setScrapedData] = useState<ScrapedData | null>(null);
     const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
+    const [translatedSummary, setTranslatedSummary] =
+        useState<TranslationData | null>(null);
+    const [translatedKeyPoints, setTranslatedKeyPoints] =
+        useState<TranslationData | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [summaryLength, setSummaryLength] = useState<
-        "short" | "medium" | "long"
-    >("medium");
+    const summaryLength = "short";
 
     const handleScrapeAndSummarize = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -37,6 +44,8 @@ export default function BlogSummarizer() {
         setError("");
         setScrapedData(null);
         setSummaryData(null);
+        setTranslatedSummary(null);
+        setTranslatedKeyPoints(null);
 
         try {
             // Step 1: Scrape the blog URL
@@ -77,6 +86,48 @@ export default function BlogSummarizer() {
 
             const summarizeResult = await summarizeResponse.json();
             setSummaryData(summarizeResult.data);
+
+            // Step 3: Translate the summary and key points to Urdu
+            try {
+                const [
+                    summaryTranslationResponse,
+                    keyPointsTranslationResponse,
+                ] = await Promise.all([
+                    fetch("/api/translate", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            text: summarizeResult.data.summary.text,
+                        }),
+                    }),
+                    fetch("/api/translate", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            text: summarizeResult.data.summary.keyPoints,
+                        }),
+                    }),
+                ]);
+
+                if (summaryTranslationResponse.ok) {
+                    const summaryTranslation =
+                        await summaryTranslationResponse.json();
+                    setTranslatedSummary(summaryTranslation.data);
+                }
+
+                if (keyPointsTranslationResponse.ok) {
+                    const keyPointsTranslation =
+                        await keyPointsTranslationResponse.json();
+                    setTranslatedKeyPoints(keyPointsTranslation.data);
+                }
+            } catch (translationError) {
+                console.error("Translation failed:", translationError);
+                // Don't throw error for translation failure, just log it
+            }
         } catch (err: any) {
             setError(err.message || "An error occurred");
         } finally {
@@ -103,19 +154,6 @@ export default function BlogSummarizer() {
                         className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     />
-                    <select
-                        value={summaryLength}
-                        onChange={(e) =>
-                            setSummaryLength(
-                                e.target.value as "short" | "medium" | "long"
-                            )
-                        }
-                        className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value="short">Short Summary</option>
-                        <option value="medium">Medium Summary</option>
-                        <option value="long">Long Summary</option>
-                    </select>
                     <button
                         type="submit"
                         disabled={loading}
@@ -188,7 +226,7 @@ export default function BlogSummarizer() {
                     <div className="prose max-w-none">
                         <div className="mb-6">
                             <h3 className="text-lg font-medium mb-2">
-                                Summary
+                                Summary (English)
                             </h3>
                             <div className="bg-gray-50 p-4 rounded-lg">
                                 {summaryData.summary.text
@@ -204,9 +242,30 @@ export default function BlogSummarizer() {
                             </div>
                         </div>
 
-                        <div>
+                        {translatedSummary && (
+                            <div className="mb-6">
+                                <h3 className="text-lg font-medium mb-2">
+                                    Summary (اردو)
+                                </h3>
+                                <div className="bg-green-50 p-4 rounded-lg">
+                                    {translatedSummary.translatedText
+                                        .split("\n")
+                                        .map((paragraph, index) => (
+                                            <p
+                                                key={index}
+                                                className="mb-3 last:mb-0"
+                                                dir="rtl"
+                                            >
+                                                {paragraph}
+                                            </p>
+                                        ))}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="mb-6">
                             <h3 className="text-lg font-medium mb-2">
-                                Key Points
+                                Key Points (English)
                             </h3>
                             <div className="bg-blue-50 p-4 rounded-lg">
                                 {summaryData.summary.keyPoints
@@ -221,6 +280,27 @@ export default function BlogSummarizer() {
                                     ))}
                             </div>
                         </div>
+
+                        {translatedKeyPoints && (
+                            <div>
+                                <h3 className="text-lg font-medium mb-2">
+                                    Key Points (اردو)
+                                </h3>
+                                <div className="bg-indigo-50 p-4 rounded-lg">
+                                    {translatedKeyPoints.translatedText
+                                        .split("\n")
+                                        .map((point, index) => (
+                                            <div
+                                                key={index}
+                                                className="mb-2 last:mb-0"
+                                                dir="rtl"
+                                            >
+                                                {point}
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
