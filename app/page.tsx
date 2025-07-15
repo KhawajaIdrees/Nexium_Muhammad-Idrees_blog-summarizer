@@ -35,6 +35,7 @@ export default function BlogSummarizer() {
     const [translatedKeyPoints, setTranslatedKeyPoints] =
         useState<TranslationData | null>(null);
     const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
     const summaryLength = "short";
 
@@ -135,6 +136,42 @@ export default function BlogSummarizer() {
         }
     };
 
+    const handleSaveBlog = async () => {
+        if (!scrapedData || !summaryData) {
+            setError("No blog data to save");
+            return;
+        }
+
+        setSaving(true);
+        setError("");
+
+        try {
+            const response = await fetch("/api/blog", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: scrapedData.title,
+                    content: scrapedData.content,
+                    summary: summaryData.summary.text,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to save blog");
+            }
+
+            const result = await response.json();
+            alert("Blog saved successfully!");
+        } catch (err: any) {
+            setError(err.message || "Failed to save blog");
+        } finally {
+            setSaving(false);
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto p-6 space-y-6">
             <div className="text-center">
@@ -222,7 +259,16 @@ export default function BlogSummarizer() {
 
             {summaryData && (
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                    <h2 className="text-xl font-semibold mb-4">Summary</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold">Summary</h2>
+                        <button
+                            onClick={handleSaveBlog}
+                            disabled={saving}
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                        >
+                            {saving ? "Saving..." : "Save Blog"}
+                        </button>
+                    </div>
                     <div className="prose max-w-none">
                         <div className="mb-6">
                             <h3 className="text-lg font-medium mb-2">

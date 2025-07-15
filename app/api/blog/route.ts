@@ -4,30 +4,33 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function GET() {
-    const blogs = await prisma.blog.findMany({ include: { user: true } });
-    return NextResponse.json(blogs);
+    try {
+        const blogs = await prisma.blog.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+        return NextResponse.json(blogs);
+    } catch (error: any) {
+        // If table doesn't exist, return empty array
+        if (error.code === "P2021") {
+            return NextResponse.json([]);
+        }
+        console.error("Failed to fetch blogs:", error);
+        return NextResponse.json(
+            { error: "Failed to fetch blogs" },
+            { status: 500 }
+        );
+    }
 }
 
 export async function POST(req: Request) {
-    const body = await req.json();
-    const { title, content, summary, userId } = body;
-
-    if (!title || !content || !userId) {
-        return NextResponse.json(
-            { error: "title, content, and userId are required." },
-            { status: 400 }
-        );
-    }
-
     try {
-        // Check if user exists first
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-        });
+        const body = await req.json();
+        const { title, content, summary } = body;
 
-        if (!user) {
+        // Validate required fields
+        if (!title || !content) {
             return NextResponse.json(
-                { error: "User not found. Please provide a valid userId." },
+                { error: "Title and content are required." },
                 { status: 400 }
             );
         }
@@ -36,18 +39,21 @@ export async function POST(req: Request) {
             data: {
                 title,
                 content,
-                summary,
-                userId,
+                summary: summary || null,
             },
         });
-        return NextResponse.json(blog);
-    } catch (error) {
+
+        return NextResponse.json({
+            success: true,
+            data: blog,
+        });
+    } catch (error: any) {
         console.error("Blog creation failed:", error);
         return NextResponse.json(
             {
-                error: "Blog creation failed. Check userId and required fields.",
+                error: "Blog creation failed. Please try again.",
             },
-            { status: 400 }
+            { status: 500 }
         );
     }
 }
