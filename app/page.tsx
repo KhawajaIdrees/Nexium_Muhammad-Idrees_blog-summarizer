@@ -105,8 +105,8 @@ export default function BlogSummarizer() {
         const translated = await keyPointsTransRes.json();
         setTranslatedKeyPoints(translated.data);
       }
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+    } catch (err: unknown) {
+      setError((err as Error).message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -139,8 +139,8 @@ export default function BlogSummarizer() {
       }
 
       alert("Blog saved successfully!");
-    } catch (err: any) {
-      setError(err.message || "An error occurred while saving.");
+    } catch (err: unknown) {
+      setError((err as Error).message || "An error occurred while saving.");
     } finally {
       setSaving(false);
     }

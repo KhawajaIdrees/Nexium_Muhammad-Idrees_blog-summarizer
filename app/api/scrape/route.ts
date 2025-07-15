@@ -102,20 +102,20 @@ export async function POST(req: Request) {
                 scrapedAt: new Date().toISOString(),
             },
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Scraping failed:", error);
 
-        if (error.code === "ENOTFOUND") {
+        if (isErrorWithCode(error, "ENOTFOUND")) {
             return NextResponse.json(
                 { error: "URL not found or unreachable." },
                 { status: 404 }
             );
         }
 
-        if (error.code === "ECONNABORTED") {
+        if (isErrorWithCode(error, "ECONNABORTED")) {
             return NextResponse.json(
                 { error: "Request timeout. Please try again." },
-                { status: 408 }
+                { status: 504 }
             );
         }
 
@@ -133,4 +133,13 @@ export async function GET() {
         message: "Blog Scraper API",
         usage: "Send a POST request with { url: 'https://example.com/blog-post' }",
     });
+}
+
+function isErrorWithCode(error: unknown, code: string): error is { code: string } {
+    return (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code: string }).code === code
+    );
 }

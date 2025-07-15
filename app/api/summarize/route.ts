@@ -101,17 +101,17 @@ Please provide the key points in a bullet-point format.
                 },
             },
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Summarization failed:", error);
 
-        if (error.message?.includes("API_KEY")) {
+        if (error instanceof Error && error.message?.includes("API_KEY")) {
             return NextResponse.json(
                 { error: "Invalid or missing Gemini API key." },
                 { status: 401 }
             );
         }
 
-        if (error.message?.includes("quota")) {
+        if (error instanceof Error && error.message?.includes("quota")) {
             return NextResponse.json(
                 { error: "API quota exceeded. Please try again later." },
                 { status: 429 }

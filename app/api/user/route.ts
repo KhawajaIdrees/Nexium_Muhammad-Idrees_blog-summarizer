@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       data: { name, email }
     })
     return NextResponse.json(user)
-  } catch (error) {
-    return NextResponse.json({ error: 'User creation failed. Email may already exist.' }, { status: 400 })
+  } catch {
+    return NextResponse.json({ error: 'User creation failed. Email may already exist.' }, { status: 400 });
   }
 }

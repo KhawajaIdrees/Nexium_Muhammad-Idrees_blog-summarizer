@@ -10,10 +10,9 @@ export async function GET() {
         });
         return NextResponse.json(blogs);
     } catch (error) {
-        return NextResponse.json(
-            { error: "Failed to fetch blogs" },
-            { status: 500 }
-        );
+        // You can log the error if needed, or remove 'error' if not used
+        // console.error(error);
+        return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
     }
 }
 
@@ -43,9 +42,7 @@ export async function POST(req: Request) {
             data: blog,
         });
     } catch (error) {
-        return NextResponse.json(
-            { error: "Blog creation failed. Please try again." },
-            { status: 500 }
-        );
+        // console.error(error);
+        return NextResponse.json({ error: "Blog creation failed. Please try again." }, { status: 500 });
     }
 }

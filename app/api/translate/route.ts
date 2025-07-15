@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
                 translatedText: translatedText,
             },
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Translation error:", error);
         return NextResponse.json(
             { error: "Failed to translate text" },

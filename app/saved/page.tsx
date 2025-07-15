@@ -26,8 +26,8 @@ export default function SavedBlogs() {
             }
             const data = await response.json();
             setBlogs(data);
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError((err as Error).message);
         } finally {
             setLoading(false);
         }
@@ -43,8 +43,8 @@ export default function SavedBlogs() {
             }
             // Remove the blog from the list
             setBlogs(blogs.filter((blog) => blog.id !== blogId));
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            setError((err as Error).message);
         }
     };
 
