@@ -9,12 +9,7 @@ export async function GET() {
             orderBy: { createdAt: "desc" },
         });
         return NextResponse.json(blogs);
-    } catch (error: any) {
-        // If table doesn't exist, return empty array
-        if (error.code === "P2021") {
-            return NextResponse.json([]);
-        }
-        console.error("Failed to fetch blogs:", error);
+    } catch (error) {
         return NextResponse.json(
             { error: "Failed to fetch blogs" },
             { status: 500 }
@@ -25,12 +20,11 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { title, content, summary } = body;
+        const { title, content, summary, userId } = body;
 
-        // Validate required fields
-        if (!title || !content) {
+        if (!title || !content || !userId) {
             return NextResponse.json(
-                { error: "Title and content are required." },
+                { error: "Title, content, and userId are required." },
                 { status: 400 }
             );
         }
@@ -40,6 +34,7 @@ export async function POST(req: Request) {
                 title,
                 content,
                 summary: summary || null,
+                userId: Number(userId),
             },
         });
 
@@ -47,12 +42,9 @@ export async function POST(req: Request) {
             success: true,
             data: blog,
         });
-    } catch (error: any) {
-        console.error("Blog creation failed:", error);
+    } catch (error) {
         return NextResponse.json(
-            {
-                error: "Blog creation failed. Please try again.",
-            },
+            { error: "Blog creation failed. Please try again." },
             { status: 500 }
         );
     }

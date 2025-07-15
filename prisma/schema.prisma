@@ -7,10 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  blogs    Blog[]  // 1:N relationship
+}
+
 model Blog {
-  id      Int     @id @default(autoincrement())
-  title   String
-  content String
-  summary String?
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  summary   String?
   createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }

@@ -13,10 +13,15 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-    title: "Blog Summarizer",
-    description: "Summarize blogs with AI",
+// app/layout.tsx
+
+export const metadata = {
+  title: "My Blog App",
+  description: "AI-powered blog summarizer",
+ 
 };
+
+
 
 export default function RootLayout({
     children,
