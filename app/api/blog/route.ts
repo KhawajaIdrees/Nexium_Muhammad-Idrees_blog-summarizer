@@ -9,9 +9,7 @@ export async function GET() {
             orderBy: { createdAt: "desc" },
         });
         return NextResponse.json(blogs);
-    } catch (error) {
-        // You can log the error if needed, or remove 'error' if not used
-        // console.error(error);
+    } catch {
         return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
     }
 }
@@ -41,8 +39,7 @@ export async function POST(req: Request) {
             success: true,
             data: blog,
         });
-    } catch (error) {
-        // console.error(error);
+    } catch {
         return NextResponse.json({ error: "Blog creation failed. Please try again." }, { status: 500 });
     }
 }
