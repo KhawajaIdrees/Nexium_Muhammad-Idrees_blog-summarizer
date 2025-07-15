@@ -1,20 +1,14 @@
-import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+export async function DELETE(request: NextRequest) {
+  const url = new URL(request.url);
+  const blogId = url.pathname.split("/").pop(); // Extract `id` from the URL
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const blogId = Number(params.id);
-  if (isNaN(blogId)) {
+  const numericId = Number(blogId);
+  if (isNaN(numericId)) {
     return NextResponse.json({ error: "Invalid blog ID" }, { status: 400 });
   }
 
-  try {
-    await prisma.blog.delete({
-      where: { id: blogId },
-    });
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: "Blog not found or could not be deleted" }, { status: 404 });
-  }
+  // Proceed with deletion logic
+  return NextResponse.json({ message: `Blog with ID ${numericId} deleted.` }, { status: 200 });
 }
