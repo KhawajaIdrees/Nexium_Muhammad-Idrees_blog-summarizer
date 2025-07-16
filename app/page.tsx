@@ -148,25 +148,25 @@ export default function BlogSummarizer() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">Blog Summarizer</h1>
-        <p className="text-gray-600">Enter a blog URL to scrape and summarize</p>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-extrabold mb-2 tracking-tight text-gray-900 dark:text-white drop-shadow-lg">Blog Summarizer</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300">Enter a blog URL to scrape and summarize</p>
       </div>
 
       <form onSubmit={handleScrapeAndSummarize} className="space-y-4">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <input
             type="url"
             placeholder="Enter blog URL"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white transition-all"
             required
           />
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 disabled:opacity-50 shadow transition-all"
           >
             {loading ? "Processing..." : "Summarize"}
           </button>
@@ -174,20 +174,20 @@ export default function BlogSummarizer() {
       </form>
 
       {error && (
-        <div className="bg-red-100 text-red-700 border border-red-200 rounded-lg p-4">
+        <div className="bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-200 border border-red-200 dark:border-red-700 rounded-lg p-4 mt-4 shadow">
           {error}
         </div>
       )}
 
       {scrapedData && (
-        <div className="bg-gray-50 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Scraped Content</h2>
-          <div className="space-y-2 text-sm">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 shadow-lg mt-6">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">Scraped Content</h2>
+          <div className="space-y-2 text-base">
             <p><strong>Title:</strong> {scrapedData.title}</p>
             <p><strong>Author:</strong> {scrapedData.author || "Unknown"}</p>
             <p><strong>Published:</strong> {scrapedData.publishDate || "Unknown"}</p>
             <p><strong>Word Count:</strong> {scrapedData.wordCount}</p>
-            <p><strong>URL:</strong> <a href={scrapedData.url} className="text-blue-600 underline" target="_blank">{scrapedData.url}</a></p>
+            <p><strong>URL:</strong> <a href={scrapedData.url} className="text-blue-600 dark:text-blue-400 underline" target="_blank" rel="noopener noreferrer">{scrapedData.url}</a></p>
             {scrapedData.description && (
               <p><strong>Description:</strong> {scrapedData.description}</p>
             )}
@@ -196,23 +196,23 @@ export default function BlogSummarizer() {
       )}
 
       {summaryData && (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Summary</h2>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-xl mt-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Summary</h2>
             <button
-              type="button" // Prevent form submission
+              type="button"
               onClick={handleSaveBlog}
               disabled={saving}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 text-sm"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 dark:hover:bg-green-500 disabled:opacity-50 shadow transition-all text-sm"
             >
               {saving ? "Saving..." : "Save Blog"}
             </button>
           </div>
 
-          <div className="prose max-w-none space-y-4">
+          <div className="prose max-w-none space-y-4 dark:prose-invert">
             <div>
               <h3 className="text-lg font-medium mb-1">Summary (English)</h3>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 {summaryData.summary.text.split("\n").map((p, i) => (
                   <p key={i} className="mb-2">{p}</p>
                 ))}
@@ -222,7 +222,7 @@ export default function BlogSummarizer() {
             {translatedSummary && (
               <div>
                 <h3 className="text-lg font-medium mb-1">Summary (اردو)</h3>
-                <div className="bg-green-50 p-4 rounded-lg" dir="rtl">
+                <div className="bg-green-50 dark:bg-green-900/40 p-4 rounded-lg" dir="rtl">
                   {translatedSummary.translatedText.split("\n").map((p, i) => (
                     <p key={i} className="mb-2">{p}</p>
                   ))}
@@ -232,7 +232,7 @@ export default function BlogSummarizer() {
 
             <div>
               <h3 className="text-lg font-medium mb-1">Key Points (English)</h3>
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-blue-50 dark:bg-blue-900/40 p-4 rounded-lg">
                 {summaryData.summary.keyPoints.split("\n").map((p, i) => (
                   <p key={i} className="mb-2">{p}</p>
                 ))}
@@ -242,7 +242,7 @@ export default function BlogSummarizer() {
             {translatedKeyPoints && (
               <div>
                 <h3 className="text-lg font-medium mb-1">Key Points (اردو)</h3>
-                <div className="bg-indigo-50 p-4 rounded-lg" dir="rtl">
+                <div className="bg-indigo-50 dark:bg-indigo-900/40 p-4 rounded-lg" dir="rtl">
                   {translatedKeyPoints.translatedText.split("\n").map((p, i) => (
                     <p key={i} className="mb-2">{p}</p>
                   ))}

@@ -22,7 +22,7 @@ export default function Sidebar() {
         <>
             {/* Hamburger for mobile */}
             <button
-                className="md:hidden fixed top-4 left-4 z-30 p-2 rounded bg-white border shadow"
+                className="md:hidden fixed top-4 left-4 z-30 p-2 rounded bg-white dark:bg-gray-900 border dark:border-gray-700 shadow transition-colors"
                 onClick={() => setOpen(true)}
                 aria-label="Open sidebar"
             >
@@ -40,16 +40,16 @@ export default function Sidebar() {
             {/* Sidebar drawer for mobile, static for desktop */}
             <aside
                 className={`
-                    fixed top-0 left-0 h-full w-64 bg-gray-50 border-r border-gray-200 p-6 z-30 transform transition-transform duration-200
+                    fixed top-0 left-0 h-full w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 p-6 z-30 transform transition-transform duration-200
                     ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:static md:block
                 `}
                 style={{ maxWidth: 256 }}
             >
                 {/* Close button for mobile */}
                 <div className="flex items-center justify-between mb-8 md:hidden">
-                    <h1 className="text-xl font-bold text-gray-800">Blog Summarizer</h1>
+                    <h1 className="text-xl font-bold text-gray-800 dark:text-white">Blog Summarizer</h1>
                     <button
-                        className="p-2 rounded bg-white border shadow"
+                        className="p-2 rounded bg-white dark:bg-gray-900 border dark:border-gray-700 shadow"
                         onClick={() => setOpen(false)}
                         aria-label="Close sidebar"
                     >
@@ -58,8 +58,8 @@ export default function Sidebar() {
                 </div>
                 {/* Title for desktop */}
                 <div className="mb-8 hidden md:block">
-                    <h1 className="text-xl font-bold text-gray-800">Blog Summarizer</h1>
-                    <p className="text-sm text-gray-600 mt-1">AI-powered blog analysis</p>
+                    <h1 className="text-xl font-bold text-gray-800 dark:text-white">Blog Summarizer</h1>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">AI-powered blog analysis</p>
                 </div>
 
                 <nav className="space-y-2">
@@ -71,8 +71,8 @@ export default function Sidebar() {
                                 href={item.href}
                                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                                     isActive
-                                        ? "bg-blue-100 text-blue-700 border border-blue-200"
-                                        : "text-gray-700 hover:bg-gray-100"
+                                        ? "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
+                                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 }`}
                                 onClick={() => setOpen(false)}
                             >
@@ -82,8 +82,8 @@ export default function Sidebar() {
                     })}
                 </nav>
 
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                    <div className="text-xs text-gray-500">
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                         <p>Powered by Gemini AI</p>
                         <p className="mt-1">Translate to Urdu</p>
                     </div>

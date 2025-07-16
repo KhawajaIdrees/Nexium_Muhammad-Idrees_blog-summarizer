@@ -3,6 +3,36 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes gradient-move {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-move 10s ease-in-out infinite;
+}
+
+/* Add smooth transitions for dark mode and UI elements */
+body, .bg-gray-50, .bg-white, .border, .text-gray-700, .text-gray-800, .text-gray-600, .text-blue-700, .bg-blue-100, .bg-blue-600, .bg-green-600, .bg-indigo-50, .bg-green-50, .bg-gray-900, .bg-gray-800, .bg-gray-700 {
+  transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+
+/* Enhance dark mode colors if needed */
+.dark .bg-gray-50 { background-color: #18181b !important; }
+.dark .bg-white { background-color: #23272f !important; }
+.dark .text-gray-700, .dark .text-gray-800, .dark .text-gray-600 { color: #e5e7eb !important; }
+.dark .border-gray-200 { border-color: #333646 !important; }
+.dark .bg-blue-100 { background-color: #23272f !important; }
+.dark .bg-blue-600 { background-color: #2563eb !important; }
+.dark .bg-green-600 { background-color: #059669 !important; }
+.dark .bg-indigo-50 { background-color: #23272f !important; }
+.dark .bg-green-50 { background-color: #23272f !important; }
+
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
