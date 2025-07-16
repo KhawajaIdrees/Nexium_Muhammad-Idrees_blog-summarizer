@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Always show pointer cursor on buttons */
+button, [role=button], .cursor-pointer {
+  cursor: pointer !important;
+}
+
 @keyframes gradient-move {
   0%, 100% {
     background-position: 0% 50%;
