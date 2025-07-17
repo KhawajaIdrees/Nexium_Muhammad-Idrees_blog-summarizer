@@ -125,11 +125,11 @@ export default function SavedBlogs() {
                             )}
 
                             <div>
-                                <h4 className="font-medium mb-2 text-gray-700">
+                                <h4 className="font-medium mb-2 text-white-700">
                                     Content Preview:
                                 </h4>
                                 <div className="bg-blue-50 p-4 rounded-lg">
-                                    <p className="text-gray-700 line-clamp-3">
+                                    <p className="text-black line-clamp-3">
                                         {blog.content.length > 300
                                             ? `${blog.content.substring(
                                                   0,
