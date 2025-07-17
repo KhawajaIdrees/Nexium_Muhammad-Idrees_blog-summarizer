@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-
 export async function POST(req: Request) {
     try {
         const body = await req.json();
@@ -30,6 +27,8 @@ export async function POST(req: Request) {
                 { status: 500 }
             );
         }
+        // Initialize Gemini AI client here
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
         // Determine summary length
         let lengthInstruction = "";
